@@ -19,11 +19,44 @@ spec:
       database: postgres
       cache: redis
   policies:
+  
   - name: deploy-to-vcluster
     type: topology
     properties:
       clusters: ["parking-automation"]  # Will be updated with actual vCluster name
       namespace: "default"
+      - name: reservation-service
+      type: webservice
+      properties:
+        image: docker.io/socrates12345/reservation-service:latest
+        port: 8080
+        version: "1.0.0"
+        healthPath: "/health"
+        resources:
+          cpu: "500m"
+          memory: "1Gi"
+        environment:
+          LOG_LEVEL: "INFO"
+          DATABASE_NAME: "reservation_db"
+          STRIPE_WEBHOOK_SECRET: ""  # From secret
+          ENABLE_DYNAMIC_PRICING: "false"  # MVP uses static pricing
+        envFrom:
+          - secretRef:
+              name: reservation-db-credentials
+          - secretRef:
+              name: stripe-credentials
+          - secretRef:
+              name: redis-credentials
+        language: python
+        framework: fastapi
+        database: postgres
+        cache: redis
+        repository: automated-parking-system
+        enableGraphQLFederation: true
+        openApiPath: "/api/v1/openapi.json"
+        apiVersion: "v1"
+
+
   # Add your components here using the following types:
   # - microservice-with-db: Full-featured microservice with database and cache
   # - react-frontend: React TypeScript frontend with Material-UI
