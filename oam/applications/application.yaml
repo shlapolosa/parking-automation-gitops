@@ -29,7 +29,7 @@ spec:
     type: webservice
     properties:
       name: reservation-service
-      image: docker.io/socrates12345/reservation-service:90b0ad6
+      image: docker.io/socrates12345/reservation-service:latest
       language: python
       framework: fastapi
       port: 8080
@@ -37,6 +37,41 @@ spec:
       database: postgres
       cache: redis
       repository: parking-automation
+
+  # User Service (Authentication, Profile Management)
+  - name: user-service
+    type: webservice
+    properties:
+      name: user-service
+      image: docker.io/socrates12345/parking-user-service:latest
+      language: python
+      framework: fastapi
+      port: 8080
+      healthPath: /health
+      database: postgres
+      cache: redis
+      repository: parking-automation
+      version: v1.0.0
+      resources:
+        cpu: "500m"
+        memory: "1Gi"
+      environment:
+        SERVICE_NAME: "user-service"
+        LOG_LEVEL: "INFO"
+        JWT_SECRET_KEY: "from-secret"
+        JWT_ALGORITHM: "RS256"
+        ACCESS_TOKEN_EXPIRE_MINUTES: "15"
+        REFRESH_TOKEN_EXPIRE_DAYS: "7"
+        OAUTH_GOOGLE_CLIENT_ID: "from-secret"
+        OAUTH_APPLE_CLIENT_ID: "from-secret"
+        OAUTH_FACEBOOK_CLIENT_ID: "from-secret"
+        STRIPE_PUBLISHABLE_KEY: "from-secret"
+      envFrom:
+        - secretRef:
+            name: user-service-secrets
+      enableGraphQLFederation: true
+      openApiPath: /api/v1/openapi.json
+      apiVersion: v1
 
   # Deploy to host cluster (no vCluster topology)
   # This allows immediate deployment without vCluster dependency
