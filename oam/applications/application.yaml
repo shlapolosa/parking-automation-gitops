@@ -24,9 +24,19 @@ spec:
       cache: redis
       repository: parking-automation
 
-  policies:
-  - name: deploy-to-vcluster
-    type: topology
+  # Reservation service for managing parking reservations
+  - name: reservation-service
+    type: webservice
     properties:
-      clusters: ["automated-parking"]
-      namespace: "default"
+      name: reservation-service
+      image: docker.io/socrates12345/reservation-service:latest
+      language: python
+      framework: fastapi
+      port: 8080
+      healthPath: /health
+      database: postgres
+      cache: redis
+      repository: parking-automation
+
+  # Deploy to host cluster (no vCluster topology)
+  # This allows immediate deployment without vCluster dependency
