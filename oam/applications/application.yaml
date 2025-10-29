@@ -29,7 +29,7 @@ spec:
     type: webservice
     properties:
       name: reservation-service
-      image: docker.io/socrates12345/reservation-service:latest
+      image: docker.io/socrates12345/reservation-service:90b0ad6
       language: python
       framework: fastapi
       port: 8080
