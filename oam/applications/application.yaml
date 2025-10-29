@@ -24,40 +24,9 @@ spec:
       cache: redis
       repository: parking-automation
 
-  # Reservation service - currently commented out
-  # To enable: First create the microservice using:
-  #   /create microservice reservation-service python --parent parking-automation
-  # Then uncomment the section below:
-  #
-  # - name: reservation-service
-  #   type: webservice
-  #   properties:
-  #     name: reservation-service
-  #     image: docker.io/socrates12345/reservation-service:latest
-  #     port: 8080
-  #     healthPath: /health
-  #     language: python
-  #     framework: fastapi
-  #     database: postgres
-  #     cache: redis
-  #     repository: parking-automation
-  #     resources:
-  #       cpu: "500m"
-  #       memory: "1Gi"
-  #     environment:
-  #       LOG_LEVEL: "INFO"
-  #       DATABASE_NAME: "reservation_db"
-  #       ENABLE_DYNAMIC_PRICING: "false"
-
   policies:
   - name: deploy-to-vcluster
     type: topology
     properties:
-      clusters: ["parking-automation"]
+      clusters: ["automated-parking"]
       namespace: "default"
-  
-  - name: health-policy
-    type: health
-    properties:
-      probeInterval: 30
-      probeTimeout: 10
